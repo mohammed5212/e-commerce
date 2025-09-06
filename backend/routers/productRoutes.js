@@ -1,12 +1,17 @@
-const express = require("express");
-const router = express.Router();
-const { protect, authorize } = require("../middleware/authMiddleware");
-const { createProduct, getProducts } = require("../controllers/productController");
+const express = require("express")
+const router = express.Router()
+const {protect, authorize}=require("../middleware/auth")
+const {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct,}=require("../controllers/productController")
 
-// Public route
-router.get("/", getProducts);
 
-// Protected (only logged-in users)
-router.post("/", protect, authorize("admin"), createProduct);
+///public routes///
+router.get("/",getAllProducts)        ///get all products
+router.get("/:id",getProductById)    ///get single product by id
 
-module.exports = router;
+///proected routes (admin only)
+
+router.post("/",protect,authorize,("admin"),createProduct)     ///create product
+router.put("/:id",protect,authorize,("admin"),updateProduct)     //update product
+router.delete("/:id",protect,authorize,("admin"),deleteProduct)   //delete product
+
+module.exports=router

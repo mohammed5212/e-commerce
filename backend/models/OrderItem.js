@@ -9,4 +9,15 @@ const orderItemSchema = new mongoose.schema (
 
     },{timestamps:true}
 )
+//  Virtual populate (Order → OrderItems)//
+orderSchema.virtual("orderItems", {
+  ref: "OrderItem",         // The model to use//
+  localField: "_id",        // Find OrderItems where `order_id` = this._id//
+  foreignField: "order_id"
+});
+
+// Enable virtuals in JSON and objects//
+orderSchema.set("toObject", { virtuals: true });
+orderSchema.set("toJSON", { virtuals: true });
+
 module.exports = mongoose.model("OrderItem",orderItemSchema)

@@ -10,16 +10,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mohammed5212/main-project.git"
+    "url": "git+https://github.com/mohammed5212/e-commmerce.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/mohammed5212/main-project/issues"
+    "url": "https://github.com/mohammed5212/e-commerce/issues"
   },
-  "homepage": "https://github.com/mohammed5212/main-project#readme",
+  "homepage": "https://github.com/mohammed5212/e-commerce#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
