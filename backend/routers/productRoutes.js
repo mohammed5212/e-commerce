@@ -6,12 +6,12 @@ const {createProduct, getAllProducts, getProductById, updateProduct, deleteProdu
 
 ///public routes///
 router.get("/",getAllProducts)        ///get all products
-router.get("/:id",getProductById)    ///get single product by id
+ router.get("/:id",getProductById)    ///get single product by id
 
 ///proected routes (admin only)
 
-router.post("/",protect,authorize,("admin"),createProduct)     ///create product
-router.put("/:id",protect,authorize,("admin"),updateProduct)     //update product
-router.delete("/:id",protect,authorize,("admin"),deleteProduct)   //delete product
+ router.post("/",protect,authorize("admin"),createProduct)     ///create product
+ router.put("/:id",protect,authorize("admin"),updateProduct)     //update product
+ router.delete("/:id",protect,authorize("admin"),deleteProduct)   //delete product
 
 module.exports=router

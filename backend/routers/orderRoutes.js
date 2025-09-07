@@ -1,21 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const orderController = require("../controllers/orderController");
-const auth = require("../middleware/authMiddleware");
+const {
+  createOrder,
+  getOrderById,
+  getAllOrders,
+  getUserOrders,
+  updateOrderStatus,
+  deleteOrder,
+} = require("../controllers/orderController");
 
-// Create new order (user only)
-router.post("/", auth, orderController.createOrder);
+const { protect, admin, authorize } = require("../middleware/auth");
 
-// Get order by ID
-router.get("/:id", auth, orderController.getOrderById);
+// USER ROUTES
 
-// Get all orders (admin only)
-router.get("/", auth, orderController.getAllOrders);
+// Create a new order (logged-in user)
+router.post("/", protect, createOrder);
 
-// Update status (admin only)
-router.put("/:id/status", auth, orderController.updateOrderStatus);
+// Get logged-in user's order history
+router.get("/my", protect, getUserOrders);
 
-// Delete order (admin only)
-router.delete("/:id", auth, orderController.deleteOrder);
+// Get single order by ID (must be logged in)
+router.get("/:id", protect, getOrderById);
+
+// ADMIN ROUTES
+
+// Get all orders (Admin only)
+router.get("/", protect, authorize ("admin"), getAllOrders);
+
+// Update order status (Admin only)
+router.put("/:id/status", protect, authorize ("admin"), updateOrderStatus);
+
+// Delete an order (Admin only)
+router.delete("/:id", protect,authorize ("admin"), deleteOrder);
 
 module.exports = router;
