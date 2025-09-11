@@ -18,7 +18,12 @@ const orderSchema = new mongoose.Schema(
     },
     totalAmount: {
       type: Number, required: true
-    }
+    },
+    paymentInfo: {
+  method: { type: String },
+  paymentId: { type: String },
+  paidAt: { type: Date }
+}
   },
   { timestamps: true }
 );
