@@ -8,14 +8,14 @@ const addToCart=async(req,res)=>{
         const userId= req.user.id  //from auth
         const {productId,quantity}=req.body
 
-        if(!productId || quantity){
+        if(!productId || !quantity){
             return res.status(404).json({message:"ProductId and quantity are required"})
 
         }
         // check if Product exists
         const product = await Product.findById(productId)
         if (!product){
-            return res.status(404).jason({message:"Product not found"})
+            return res.status(404).json({message:"Product not found"})
 
         }
         //find users cart

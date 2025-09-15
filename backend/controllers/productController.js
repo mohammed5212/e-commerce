@@ -3,11 +3,11 @@ const Product =require("../models/Product")
 //create new product (admin only)
 const createProduct= async(req,res)=>{
     try{
-        const {name,description, price, stock, catogery } =req.body
-        if(!name || !price || stock){
+        const {name,description, price, stock, category_id  } =req.body
+        if(!name || !price || !stock){
             return res.status(400).json({message:"Name, price and stock are required"})
         }
-        const product =new Product ({name,description, price,stock,category})
+        const product =new Product ({name,description, price,stock,category_id})
         await product.save()
         res.status(201).json({message :"product created successfully",product})
     }catch(error){
