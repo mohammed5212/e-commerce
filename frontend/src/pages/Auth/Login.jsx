@@ -1,67 +1,124 @@
-import { useState, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import InputField from "../../components/forms/InputField";
-import Button from "../../components/common/Button";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaGoogle, FaGithub, FaFacebookF } from "react-icons/fa";
 
 const Login = () => {
-  const { handleLogin } = useContext(AuthContext);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
+
     try {
-      await handleLogin(form);
-      navigate("/"); // redirect to ProductList page
+      const res = await axios.post("http://localhost:3000/api/auth/login", formData);
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      navigate("/");
     } catch (err) {
-      setError("Invalid credentials, please try again.");
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-indigo-700 relative overflow-hidden">
+      {/* Background Shapes */}
+      <div className="absolute top-10 left-20 w-20 h-20 bg-blue-400 rounded-full mix-blend-overlay blur-3xl opacity-30 animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-28 h-28 bg-indigo-400 rounded-full mix-blend-overlay blur-2xl opacity-30 animate-bounce"></div>
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      {/* Login Card */}
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg shadow-lg rounded-2xl p-8 text-white">
 
-        <form onSubmit={handleSubmit}>
-          <InputField
-            label="Email"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            required
-          />
 
-          <InputField
-            label="Password"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-          />
+        {/* Heading */}
+        <h2 className="text-xl font-semibold mb-6 text-center">Login</h2>
 
-          <Button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg">
-            Login
-          </Button>
+        {error && (
+          <p className="text-red-400 text-sm text-center mb-4">{error}</p>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
+          <div>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="username@gmail.com"
+              className="w-full px-4 py-2 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Password"
+              className="w-full px-4 py-2 rounded-lg bg-white text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
+
+          {/* Forgot Password */}
+          <div className="text-right text-sm">
+            <Link to="/forgot-password" className="hover:underline">
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg shadow-md transition disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
         </form>
 
-        <p className="text-sm text-center mt-4">
+        {/* Divider */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-white/20"></div>
+          <span className="px-2 text-sm text-white/70">or continue with</span>
+          <div className="flex-grow border-t border-white/20"></div>
+        </div>
+
+        {/* Social Login */}
+        <div className="flex justify-center gap-4">
+          <button className="p-3 bg-white rounded-lg text-red-500 shadow hover:scale-105 transition">
+            <FaGoogle />
+          </button>
+          <button className="p-3 bg-white rounded-lg text-gray-800 shadow hover:scale-105 transition">
+            <FaGithub />
+          </button>
+          <button className="p-3 bg-white rounded-lg text-blue-600 shadow hover:scale-105 transition">
+            <FaFacebookF />
+          </button>
+        </div>
+
+        {/* Register Link */}
+        <p className="text-center text-sm text-white/80 mt-6">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register now
+          <Link to="/register" className="text-yellow-300 hover:underline">
+            Register for free
           </Link>
         </p>
       </div>
