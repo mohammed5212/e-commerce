@@ -5,7 +5,7 @@ import InputField from "../../components/forms/InputField";
 import Button from "../../components/common/Button";
 
 const Register = () => {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "",  confirmPassword: ""});
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -16,6 +16,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    //check f passwords match
+    if (form.password !== form.confirmPassword){
+      setError("password donot match")
+      return
+    }
     try {
       await registerUser(form);
       navigate("/login"); // redirect to login after register
@@ -54,14 +59,22 @@ const Register = () => {
 
           <InputField
             label="Password"
-            type="password"
+            type="text"
             name="password"
             value={form.password}
             onChange={handleChange}
             placeholder="Enter your password"
             required
           />
-
+           <InputField
+    label="Confirm Password"
+    name="confirmPassword"
+    value={form.confirmPassword}
+    onChange={handleChange}
+    placeholder="Confirm your password"
+    required
+    type="text"
+      />
           <Button type="submit" className="w-full bg-green-500 text-white py-2 rounded-lg">
             Register
           </Button>
