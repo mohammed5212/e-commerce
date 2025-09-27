@@ -7,9 +7,10 @@ const InputField = ({
   name,
   value,
   onChange,
-  placeholder = "",
+  placeholder = "Name",
   required = false,
   className = "",
+  ...rest 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,6 +35,7 @@ const InputField = ({
         required={required}
         // Add right padding to prevent text from going under the icon
         className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        {...rest}
       />
       {/* Conditionally render the button only for password inputs */}
       {type === "password" && (
