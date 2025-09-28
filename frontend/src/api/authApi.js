@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL ="http://localhost:3000/api/users"
+const API_URL ="http://localhost:3000/api/auth"
 
 //login
 export const loginUser =async(Credentials)=>{
@@ -14,9 +14,9 @@ export const loginUser =async(Credentials)=>{
 
 export const registerUser= async(userData)=>{
     try{
-        const res =await axios.post(`${API_URL}/register`)
+        const res =await axios.post ("http://localhost:3000/api/auth/register/",userData)
         return res.data    //could (message user) or {token}
     }catch(error){
-        throw error.response?.data || {message: "registration failed"}
+        throw error.response?.data || { message: "Network error or server unreachable." }
     }
 }
