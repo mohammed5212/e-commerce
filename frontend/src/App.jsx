@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext'
 import { Provider } from "react-redux";
 import  store  from './app/store';
 import './index.css' 
-
 const App = () => {
   return (
     <AuthProvider>
@@ -13,6 +12,7 @@ const App = () => {
       </Provider>
     </AuthProvider>
   )
+
 }
 
 export default App
