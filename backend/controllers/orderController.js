@@ -1,10 +1,9 @@
-const mongoose = require("mongoose");
-const Order = require("../models/Order");
-const OrderItem = require("../models/OrderItem");
-
+import mongoose from "mongoose";
+import Order from "../models/Order.js";
+import OrderItem from "../models/OrderItem.js";
 // Create a New Order
 
-const createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   try {
     const { shippingAddress, items } = req.body;
     const userId = req.user.id;
@@ -49,7 +48,7 @@ const createOrder = async (req, res) => {
 
 // Get Order By Id (Aggregation)
 
-const getOrderById = async (req, res) => {
+export const getOrderById = async (req, res) => {
   try {
     const orderId = new mongoose.Types.ObjectId(req.params.id);
 
@@ -150,7 +149,7 @@ const getOrderById = async (req, res) => {
 
 // Get All Orders (Admin)
 
-const getAllOrders = async (req, res) => {
+export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.aggregate([
       // Join user
@@ -238,7 +237,7 @@ const getAllOrders = async (req, res) => {
 };
 
 // Update Order Status
-const updateOrderStatus = async (req, res) => {
+export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const order = await Order.findByIdAndUpdate(
@@ -257,7 +256,7 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 //Delete order
-const deleteOrder = async (req, res) => {
+export const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
@@ -273,7 +272,7 @@ const deleteOrder = async (req, res) => {
   }
 };
  //get orders of loged-in user//
- const getUserOrders = async (req, res) => {
+ export const getUserOrders = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
 
@@ -351,11 +350,3 @@ const deleteOrder = async (req, res) => {
   }
 };
 
-module.exports = {
-  createOrder,
-  getOrderById,
-  getAllOrders,
-  updateOrderStatus,
-  deleteOrder,
-    getUserOrders, 
-};

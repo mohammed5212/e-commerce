@@ -1,10 +1,9 @@
-const Order =require("../models/Order")
-
+import Order from "../models/Order.js"
 //initiate payment
 
 //demo
 
-const initiatePayment =async (req,res)=>{
+export const initiatePayment =async (req,res)=>{
     try{
         const userId =req.user.id
         const {orderId,paymentMethod}=req.body
@@ -39,7 +38,7 @@ const initiatePayment =async (req,res)=>{
   }
 }
 //get  payment details
-const getPaymentDetails = async (req, res) => {
+export const getPaymentDetails = async (req, res) => {
   try {
     const userId = req.user.id;
     const { orderId } = req.params;
@@ -60,4 +59,3 @@ const getPaymentDetails = async (req, res) => {
   }
 };
 
-module.exports = { initiatePayment, getPaymentDetails };

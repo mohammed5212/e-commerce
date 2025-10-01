@@ -1,12 +1,12 @@
 
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 // @desc Register a new user//
 // @route POST /api/auth/register//
 // @access Public//
-const register = async (req, res) => {
+export  const register = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
@@ -46,7 +46,7 @@ const register = async (req, res) => {
 // @desc Login user & get token
 // @route POST /api/auth/login
 // @access Public
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -85,4 +85,3 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };

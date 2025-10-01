@@ -1,4 +1,4 @@
-const mongoose=require('mongoose')
+import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema(
     {
@@ -12,4 +12,4 @@ const addressSchema = new mongoose.Schema(
 
     },{tymestamps:true}
 )
-module.exports = mongoose.model("Address",adressSchema)
+export default mongoose.model("Address",addressSchema)

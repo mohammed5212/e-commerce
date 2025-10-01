@@ -1,9 +1,7 @@
-
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-
+import jwt from "jsonwebtoken"
+import User from "../models/User.js"
 // Verify token
-const protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
    
@@ -31,7 +29,7 @@ const protect = async (req, res, next) => {
 };
 
 // Restrict routes to certain roles
-const authorize = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ message: "Access forbidden: insufficient rights" });
@@ -40,4 +38,3 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { protect, authorize };

@@ -1,18 +1,26 @@
-const express =require("express")
+import express from "express"
 const router= express.Router()
-const {protect,authorize}=require("../middleware/auth")
-const { getAllUsers, deleteUser, getUserById, updateUser, getProfile, updateProfile }=require("../controllers/userController")
+import { protect, 
+    authorize } from "../middleware/auth.js"
+import { 
+    getAllUsers, 
+    getUserById, 
+    updateUser, 
+    deleteUser, 
+    getProfile,
+     updateProfile } from "../controllers/userController.js"  
 
-//admin only
-router.get("/",protect,authorize("admin"),getAllUsers)
-router.delete("/:id",protect,authorize("admin"),deleteUser)
+// User self profile 
+router.get("/me/profile", protect, getProfile);
+router.put("/me/profile", protect, updateProfile);
 
-//admin and self
-router.get("/:id",protect,getUserById)
-router.put("/:id",protect,updateUser)
+// Admin only
+router.get("/", protect, authorize("admin"), getAllUsers);
+router.delete("/:id", protect, authorize("admin"), deleteUser);
 
-//user self profile
-router.get("/me/profile",protect,getProfile)
-router.put("/me/profile",protect,updateProfile)
+// Admin and self
+router.get("/:id", protect, getUserById);
+router.put("/:id", protect, updateUser);
 
-module.exports=router
+
+export default router
