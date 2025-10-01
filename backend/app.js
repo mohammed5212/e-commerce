@@ -1,19 +1,22 @@
-const express = require("express"); 
-const dotenv = require("dotenv");
+import express from "express";
+import dotenv from "dotenv";
 dotenv.config();
-const cors = require("cors");  
-const orderRoutes = require("./routers/orderRoutes");
-const userRoutes = require("./routers/userRoutes");
-const productRoutes = require("./routers/productRoutes");
-const categoryRoutes = require("./routers/categoryRoutes");
-const cartRoutes = require("./routers/cartRoutes");
-const paymentRoutes = require("./routers/paymentRoutes");
+import cors from "cors";
+import authRoutes from "./routers/authRoutes.js";
+import orderRoutes from "./routers/orderRoutes.js";
+import connectDB from "./config/db.js";
+connectDB();
+import userRoutes from "./routers/userRoutes.js";
+import productRoutes from "./routers/productRoutes.js";
+import categoryRoutes from "./routers/categoryRoutes.js";
+import cartRoutes from "./routers/cartRoutes.js";
+import paymentRoutes from "./routers/paymentRoutes.js";
 const app = express(); 
 // Middleware 
  app.use(cors()); 
  app.use(express.json()); // 
 // Routes
-  app.use("/api/auth", require("./routers/authRoutes"));
+  app.use("/api/auth", authRoutes);
   app.use("/api/users", userRoutes);
   app.use("/api/products", productRoutes); 
   app.use("/api/orders", orderRoutes); 
@@ -23,4 +26,6 @@ app.use("/api/payment", paymentRoutes);  // All payment-related endpoints
 // // Example root
   app.get("/", (req, res) => {
  res.send("API is running..."); 
- }); module.exports = app;
+ });
+ 
+ export default  app;

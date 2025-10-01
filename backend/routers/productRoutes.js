@@ -1,8 +1,13 @@
-const express = require("express")
+import express from "express"
 const router = express.Router()
-const {protect, authorize}=require("../middleware/auth")
-const {createProduct, getAllProducts, getProductById, updateProduct, deleteProduct,}=require("../controllers/productController")
-
+import { protect,
+     authorize } from "../middleware/auth.js  "
+import {
+    getAllProducts,
+    getProductById,createProduct,
+    updateProduct,
+    deleteProduct
+} from "../controllers/productController.js"
 
 ///public routes///
 router.get("/",getAllProducts)        ///get all products
@@ -14,4 +19,4 @@ router.get("/",getAllProducts)        ///get all products
  router.put("/:id",protect,authorize("admin"),updateProduct)     //update product
  router.delete("/:id",protect,authorize("admin"),deleteProduct)   //delete product
 
-module.exports=router
+export default router

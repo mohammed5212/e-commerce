@@ -1,9 +1,9 @@
-const mongoose =require("mongoose")
-const Cart = require("../models/Cart")
-const Product= require("../models/Product")
+import mongoose from "mongoose"
+import Cart from "../models/Cart.js"
+import Product from "../models/Product.js"
 
 //add item to cart
-const addToCart=async(req,res)=>{
+export const addToCart=async(req,res)=>{
     try{
         const userId= req.user.id  //from auth
         const {productId,quantity}=req.body
@@ -44,7 +44,7 @@ const addToCart=async(req,res)=>{
 }
 
 //update item quantity
-const updateCartitem= async(req,res)=>{
+export const updateCartitem= async(req,res)=>{
     try{ 
         const userId = req.user.id
         const {productId}=req.params
@@ -77,7 +77,7 @@ const updateCartitem= async(req,res)=>{
 
 //Remove item//
 
-const removeFromCart= async (req,res)=>{
+export const removeFromCart= async (req,res)=>{
     try{
         const userId = req.user.id
         const {productId}=req.params
@@ -97,7 +97,7 @@ const removeFromCart= async (req,res)=>{
     }
 }
 //clear cart
-const clearCart = async(req,res)=>{
+export const clearCart = async(req,res)=>{
     try{ 
         const userId =  req.user.id
     let cart = await Cart.findOne({user:userId})
@@ -112,7 +112,7 @@ const clearCart = async(req,res)=>{
   }
 }
 //get cart aggregate
- const getCart = async (req,res)=>{
+ export const getCart = async (req,res)=>{
     try{
         const userId = new mongoose .Types.ObgectId(req.user.id)
 
@@ -160,4 +160,3 @@ const clearCart = async(req,res)=>{
     res.status(500).json({ message: error.message });
   }
  }
- module.exports= {addToCart,updateCartitem,removeFromCart,clearCart,getCart}

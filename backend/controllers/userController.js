@@ -1,9 +1,9 @@
-const User = require("../models/User");
+import User from "../models/User.js"
 
-const bcrypt = require("bcrypt")
+import bcrypt from "bcrypt"
 
 //get all users
-const getAllUsers =async (req,res)=>{
+export const getAllUsers =async (req,res)=>{
     try{
         const users =await User .find().select("-password")
         res.json(users)
@@ -13,7 +13,7 @@ const getAllUsers =async (req,res)=>{
 }
 ///get user by id (admin only)
 
-const getUserById = async(req,res)=>{
+export const getUserById = async(req,res)=>{
    try{
     const {id}= req.params
 
@@ -30,7 +30,7 @@ const getUserById = async(req,res)=>{
   }
 }
 //update user (admin/user)
- const updateUser = async(req,res)=>{
+ export const updateUser = async(req,res)=>{
     try{   
         const {id}=req.params
     if(req.user.role !=="admin" &&req.user.id !==id){
@@ -56,7 +56,7 @@ const getUserById = async(req,res)=>{
 }
 
 //delete user (admin only)
-const deleteUser = async (req,res)=>{
+export const deleteUser = async (req,res)=>{
     try{
         const {id}=req.params
         if (req.user.role !=="admin"){
@@ -72,7 +72,7 @@ const deleteUser = async (req,res)=>{
   }
 }
 //get own profile
-const getProfile =async (req,res)=>{
+export const getProfile =async (req,res)=>{
     try{
         const user = await User.findById(req.user.id).select("-password")
         if (!user)return res.status(404).json("user not found")
@@ -84,7 +84,7 @@ const getProfile =async (req,res)=>{
   }
 }
 //update own profile
-const updateProfile =async(req,res)=>{
+export const updateProfile =async(req,res)=>{
     try{ const {username,email,password}=req.body
     const updateFields={}
     if(username) updateFields.username=username
@@ -100,7 +100,4 @@ const updateProfile =async(req,res)=>{
     res.status(500).json({ message: error.message });
   }
    
-}
-module.exports={
-getAllUsers,getUserById,updateUser,deleteUser,getProfile,updateProfile
 }

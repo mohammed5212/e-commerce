@@ -1,7 +1,6 @@
-const Product = require("../models/Product");
-
+import Product from "../models/Product.js";
 // create product (admin only)
-const createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category_id } = req.body;
 
@@ -29,7 +28,7 @@ const createProduct = async (req, res) => {
 };
 
 // Get all products (with category details via aggregate)
-const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.aggregate([
       {
@@ -50,7 +49,7 @@ const getAllProducts = async (req, res) => {
 };
 
 // Get single product by ID (with category details via aggregate)
-const getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
   try {
     const products = await Product.aggregate([
       { $match: { _id: require("mongoose").Types.ObjectId(req.params.id) } },
@@ -76,7 +75,7 @@ const getProductById = async (req, res) => {
 };
 
 // Update product by ID
-const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category_id } = req.body;
 
@@ -100,7 +99,7 @@ const updateProduct = async (req, res) => {
 };
 
 // Delete product by ID
-const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 
@@ -114,7 +113,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   createProduct,
   getAllProducts,
   getProductById,

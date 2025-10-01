@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
   createOrder,
+  getUserOrders,
   getOrderById,
   getAllOrders,
-  getUserOrders,
   updateOrderStatus,
-  deleteOrder,
-} = require("../controllers/orderController");
+  deleteOrder
+} from "../controllers/orderController.js";
 
-const { protect, admin, authorize } = require("../middleware/auth");
+import { protect, authorize } from "../middleware/auth.js";
 
 // USER ROUTES
 
@@ -33,4 +33,4 @@ router.put("/:id/status", protect, authorize ("admin"), updateOrderStatus);
 // Delete an order (Admin only)
 router.delete("/:id", protect,authorize ("admin"), deleteOrder);
 
-module.exports = router;
+export default router;
