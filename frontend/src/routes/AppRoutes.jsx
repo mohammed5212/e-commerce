@@ -12,7 +12,12 @@ const AppRoutes = () => {
         {/* Public */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path ="/"element ={<HomePage/>}/>
+        <Route path ="/"element =
+       {
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }/>
         
         
 
