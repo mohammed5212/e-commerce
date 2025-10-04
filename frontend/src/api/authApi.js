@@ -3,6 +3,7 @@ const API_URL ="http://localhost:3000/api/auth"
 
 //login
 export const loginUser =async(Credentials)=>{
+    console.log("Logged in user:", user);
     try{
         const res =await axios.post(`${API_URL}/login`,Credentials)
         return res.data  //should {token ,data}
