@@ -12,11 +12,18 @@ import categoryRoutes from "./routers/categoryRoutes.js";
 import cartRoutes from "./routers/cartRoutes.js";
 import paymentRoutes from "./routers/paymentRoutes.js";
 const app = express(); 
+
+
 // Middleware 
+// Allow your frontend + localhost (for local dev)
 app.use(cors({
-  origin: "*", 
-  credentials: true,
+  origin: [
+    "https://e-commerce-frontend-silk-eta.vercel.app", // live frontend
+    "http://localhost:5173" // local frontend for development
+  ],
+  credentials: true // allow cookies/auth headers
 }));
+
  app.use(express.json()); // 
 // Routes
   app.use("/api/auth", authRoutes);
