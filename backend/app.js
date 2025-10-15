@@ -13,7 +13,10 @@ import cartRoutes from "./routers/cartRoutes.js";
 import paymentRoutes from "./routers/paymentRoutes.js";
 const app = express(); 
 // Middleware 
- app.use(cors()); 
+app.use(cors({
+  origin: "*", 
+  credentials: true,
+}));
  app.use(express.json()); // 
 // Routes
   app.use("/api/auth", authRoutes);
