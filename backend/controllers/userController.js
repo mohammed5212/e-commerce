@@ -42,6 +42,7 @@ return res.status(201).json({
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email,password);
 
     // Check fields
     if (!email || !password) {
