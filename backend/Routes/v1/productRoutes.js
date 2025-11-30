@@ -7,6 +7,8 @@ const authAdmin = require('../../Middlewares/authAdmin');
 const productRouter = require('express').Router();
 
 
-productRouter.post('/create',authAdmin ,upload.single("image"), create);
+// productRouter.post('/create',authAdmin ,upload.single("image"), create);
+
+productRouter.post('/create' ,upload.single("image"), create);
 
 module.exports = productRouter;

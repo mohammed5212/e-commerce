@@ -1,20 +1,26 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const authAdmin =(req,res)=>{
-    try {
-        const admin_token = req.cookies
-        if (!admin_token) {
-            return res.status(401).json({ message: "No token provided, authorization denied." });
-        }   
-        const decoded = jwt.verify(admin_token.token, process.env.JWT_SECRET);
-        req.admin = decoded.adminId;
-        next();
+const authAdmin = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
 
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
 
-}catch (error) {
-        console.log(error);
-        res.status(error.status || 500).json({ error:error.message ||  'Server error' });
-    }   
-}
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-module.exports=authAdmin;
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Access denied, admin only" });
+    }
+
+    req.admin = decoded.id; // Attach admin ID
+    next();
+
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+module.exports = authAdmin;

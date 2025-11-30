@@ -1,8 +1,23 @@
-const { register,logout,login } = require('../../Controllers/adminController'); 
-const adminRouter = require("express").Router();
 
-adminRouter.post("/register", register);
-adminRouter.post("/login", login)
-adminRouter.post("/logout", logout);
+const express = require('express');
+const {
+  registerAdmin,loginAdmin,logoutAdmin} = require('../../Controllers/adminController');
+const router = express.Router();
+const authAdmin = require('../../Middlewares/authAdmin');
 
-module.exports = adminRouter;
+// Public routes
+router.post('/register',registerAdmin);
+router.post('/login', loginAdmin);
+
+// Protected route example
+router.get('/dashboard', authAdmin, (req, res) => {
+  res.json({
+    message: "Admin dashboard access granted",
+    adminId: req.admin
+  });
+});
+
+// Logout admin
+router.get('/logout', authAdmin, logoutAdmin);
+
+module.exports = router;

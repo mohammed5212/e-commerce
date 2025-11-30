@@ -67,23 +67,33 @@ const login = async (req, res) => {
     
        return res.status(200).json({
       message: "Login successful",
-    //   token,
+      token,
       user: {
         username: userExist.username,
         email: userExist.email
         
       }
     });
+   
 
   } catch (error) {
      console.log(error);
         res.status(error.status || 500).json({ error:error.message ||  'Server error' });
   }
 };
-
+ const logout = async (req, res) => {
+  try {
+    res.clearCookie("token");   
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status || 500).json({ error: error.message || "Server error" });
+  } 
+};
 
 
 module.exports = {
   register,
   login,
+  logout
 };
