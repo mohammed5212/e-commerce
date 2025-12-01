@@ -1,5 +1,8 @@
 const { uploadToCloudinary } = require("../Utils/imageUpload");
 const ProductDb = require("../models/productModel");
+
+
+
 const create= async(req, res) => {
 
     try {
@@ -31,4 +34,77 @@ const create= async(req, res) => {
         res.status(error.status || 500).json({ error:error.message ||  'Server error' });
     }
 }
-module.exports = {create};
+
+const listProducts = async (req, res) => {
+    try {
+        const products = await ProductDb.find();        
+        res.status(200).json(products);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const productDetails = async (req, res) => {
+    try {
+        const { productId } = req.params;   
+        const product = await ProductDb.findById({_id: productId});
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }   
+        res.status(200).json(product);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+const updateProduct = async (req, res) => {
+    try {
+        const {productId}=req.params
+      const{title,description,duration,price}=req.body
+      let imageUrl;
+    let isProductExist = await ProductDb.findById(productId)
+        if(!isProductExist){
+            return res.satus (404).json({message :"Product not found"})
+        }
+        if(req.file){
+            const cloudinaryRes = await uploadToCloudinary(req.file.path);
+            imageUrl= cloudinaryRes;
+        }
+        const uploadedProduct =await ProductDb.findByIdAndUpdate(productId,{
+            title:title || isProductExist.title,
+            description:description || isProductExist.description,  
+            duration:duration || isProductExist.duration,
+            price:price || isProductExist.price,
+            image:imageUrl || isProductExist.image,
+        },{new:true})
+
+        res.status(200).json({message:"Product updated successfully",uploadedProduct});
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message ||'Server error' });
+    }
+};  
+
+const deleteProduct = async (req, res) => {
+    try {
+        const { productId } = req.params;   
+        const deletedProduct = await ProductDb.findByIdAndDelete(productId);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "Product deleted successfully" });
+    }   catch (error) { 
+        console.log(error);
+        res.status(500).json({ error:error.message || 'Server error' });
+    }
+
+}   
+
+
+
+
+      
+module.exports = {create ,listProducts, productDetails, updateProduct, deleteProduct};

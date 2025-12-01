@@ -18,6 +18,6 @@ router.get('/dashboard', authAdmin, (req, res) => {
 });
 
 // Logout admin
-router.get('/logout', authAdmin, logoutAdmin);
+router.get('/logout', logoutAdmin);
 
 module.exports = router;
