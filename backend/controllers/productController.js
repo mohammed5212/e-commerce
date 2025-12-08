@@ -6,8 +6,8 @@ const ProductDb = require("../models/productModel");
 const create= async(req, res) => {
 
     try {
-       const { title, description, price, duration } = req.body;
-       if (!title || !description || !price || !duration || !req.file) {
+       const { title, description, price } = req.body;
+       if (!title || !description || !price ||  !req.file) {
         return res.status(400).json({ message: "All fields are required" });
        }
        const cloudinaryRes = await uploadToCloudinary(req.file.path);
@@ -17,7 +17,7 @@ const create= async(req, res) => {
         title,
         description,
         price,  
-        duration,
+       
         image: cloudinaryRes, // Use the URL from Cloudinary
        });
        let savedProduct =
@@ -62,7 +62,7 @@ const productDetails = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const {productId}=req.params
-      const{title,description,duration,price}=req.body
+      const{title,description,price}=req.body
       let imageUrl;
     let isProductExist = await ProductDb.findById(productId)
         if(!isProductExist){
@@ -75,7 +75,7 @@ const updateProduct = async (req, res) => {
         const uploadedProduct =await ProductDb.findByIdAndUpdate(productId,{
             title:title || isProductExist.title,
             description:description || isProductExist.description,  
-            duration:duration || isProductExist.duration,
+            
             price:price || isProductExist.price,
             image:imageUrl || isProductExist.image,
         },{new:true})
