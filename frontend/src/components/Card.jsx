@@ -1,5 +1,5 @@
 import React from "react";
-export default function ProductCard({ product }) {
+const ProductCard=({ product })=> {
   return (
      <div className="bg-white rounded-lg shadow-sm border p-2 w-full">
       <div className="w-full h-28 rounded-md overflow-hidden bg-gray-100">
@@ -27,3 +27,4 @@ export default function ProductCard({ product }) {
     </div>
     );
 }
+export default ProductCard;

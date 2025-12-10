@@ -38,7 +38,7 @@ const create= async(req, res) => {
 const listProducts = async (req, res) => {
     try {
         const products = await ProductDb.find();        
-        res.status(200).json(products);
+       res.status(200).json({ products });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Server error' });

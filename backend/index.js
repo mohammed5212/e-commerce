@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: true,     
+  origin: ["http://localhost:5173", "http://localhost:5174"],// frontend URL  
   
   credentials: true 
 }));
@@ -44,5 +44,3 @@ app.listen(PORT, () => {console.log(`Server running on port ${PORT}`);
 
 
 
-// piQwhbNvmU8;v6C
-// adminuser
