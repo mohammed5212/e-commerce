@@ -60,6 +60,7 @@ const Products = () => {
           grid-cols-2 
           xs:grid-cols-3
           sm:grid-cols-4
+          lg:grid-cols-5
           gap-3
         "
       >

@@ -1,153 +1,128 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../services/userServices";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmpassword: "",
   });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+
+    //  Frontend validation
+    if (!form.username || !form.email || !form.password || !form.confirmpassword) {
+      setError("All fields are required");
+      return;
+    }
+
+    if (form.password !== form.confirmpassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await registerUser({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        confirmpassword: form.confirmpassword,
+      });
+
+      navigate("/login");
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Registration failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="
-      min-h-screen flex items-center justify-center 
-      bg-white dark:bg-gray-900 
-      p-4 transition-all
-    ">
-      <div className="
-        w-full max-w-md 
-        bg-gray-100 dark:bg-gray-700 
-        rounded-2xl shadow-lg p-8 
-        transition-all
-      ">
-        
-        <h2 className="text-3xl font-bold text-center 
-                      text-cyan-700 dark:text-cyan-400 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 p-4">
+      <div className="w-full max-w-md bg-gray-100 dark:bg-gray-700 rounded-2xl shadow-lg p-8">
+
+        <h2 className="text-3xl font-bold text-center text-cyan-700 dark:text-cyan-400 mb-6">
           Create Account
         </h2>
 
+        {error && (
+          <p className="text-red-500 text-center mb-3 font-medium">
+            {error}
+          </p>
+        )}
+
         <form className="space-y-4" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            placeholder="Username"
+            className="w-full p-3 rounded-lg"
+          />
 
-          {/* Username */}
-          <div>
-            <label className="block font-medium mb-1 
-                              text-cyan-700 dark:text-cyan-400">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              required
-              onChange={handleChange}
-              className="
-                w-full p-3 border rounded-lg outline-none 
-                bg-white dark:bg-gray-600 
-                border-gray-300 dark:border-gray-500
-                text-gray-900 dark:text-gray-100
-                focus:ring-2 focus:ring-blue-500
-              "
-              placeholder="Enter username"
-            />
-          </div>
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Email"
+            className="w-full p-3 rounded-lg"
+          />
 
-          {/* Email */}
-          <div>
-            <label className="block font-medium mb-1 
-                              text-cyan-700 dark:text-cyan-400">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              required
-              onChange={handleChange}
-              className="
-                w-full p-3 border rounded-lg outline-none 
-                bg-white dark:bg-gray-600 
-                border-gray-300 dark:border-gray-500
-                text-gray-900 dark:text-gray-100
-                focus:ring-2 focus:ring-blue-500
-              "
-              placeholder="Enter email"
-            />
-          </div>
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Password"
+            className="w-full p-3 rounded-lg"
+          />
 
-          {/* Password */}
-          <div>
-            <label className="block font-medium mb-1 
-                              text-cyan-700 dark:text-cyan-400">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              required
-              onChange={handleChange}
-              className="
-                w-full p-3 border rounded-lg outline-none 
-                bg-white dark:bg-gray-600 
-                border-gray-300 dark:border-gray-500
-                text-gray-900 dark:text-gray-100
-                focus:ring-2 focus:ring-blue-500
-              "
-              placeholder="Enter password"
-            />
-          </div>
+          <input
+            type="password"
+            name="confirmpassword"
+            value={form.confirmpassword}
+            onChange={handleChange}
+            placeholder="Confirm Password"
+            className="w-full p-3 rounded-lg"
+          />
 
-          {/* Confirm Password */}
-          <div>
-            <label className="block font-medium mb-1 
-                              text-cyan-700 dark:text-cyan-400">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              required
-              onChange={handleChange}
-              className="
-                w-full p-3 border rounded-lg outline-none 
-                bg-white dark:bg-gray-600 
-                border-gray-300 dark:border-gray-500
-                text-gray-900 dark:text-gray-100
-                focus:ring-2 focus:ring-blue-500
-              "
-              placeholder="Re-enter password"
-            />
-          </div>
-
-          {/* Submit */}
           <button
             type="submit"
-            className="
-              w-full bg-blue-600 hover:bg-blue-700 
-              text-white font-semibold py-3 rounded-lg 
-              mt-4 transition
-            "
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg mt-4 disabled:opacity-50"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        <p className="text-center mt-4 
-                      text-amber-700 dark:text-amber-200">
+        <p className="text-center mt-4 text-amber-700 dark:text-amber-200">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
-          >
+          <a href="/login" className="text-blue-600 hover:underline">
             Login
           </a>
         </p>
+
       </div>
     </div>
   );
