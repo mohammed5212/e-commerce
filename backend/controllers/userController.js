@@ -29,8 +29,9 @@ return res.status(201).json({
         token,
         user: {
           username: saved.username,
-          email: saved.email
-         
+          email: saved.email,
+         role: saved.role 
+          
         },
       });        }
     } catch (error) {
@@ -70,7 +71,9 @@ const login = async (req, res) => {
       token,
       user: {
         username: userExist.username,
-        email: userExist.email
+        email: userExist.email,
+        role: userExist.role
+
         
       }
     });

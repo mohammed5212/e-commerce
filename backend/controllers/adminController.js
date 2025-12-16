@@ -52,12 +52,15 @@ const loginAdmin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid password' });
 
     // Create token
-    const token = createToken(admin._id, "admin");
-
-    return res.status(200).json({
-      message: 'Login successful',
-      token,
-      admin: { email: admin.email }
+    const token = createToken(admin._id, admin.role);
+      res.cookie("token", token, { httpOnly: true });
+   
+        return res.status(200).json({
+      message: "Admin login success",
+      user: {
+        email: admin.email,
+        role: admin.role,
+      },
     });
 
   } catch (error) {
