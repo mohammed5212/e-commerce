@@ -26,7 +26,7 @@ const registerAdmin = async (req, res) => {
     return res.status(201).json({
       message: 'Admin registered successfully',
       token, 
-      admin: { email: savedAdmin.email }
+      
     });
 
   } catch (error) {
