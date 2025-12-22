@@ -1,3 +1,134 @@
+// const adminDb = require('../Models/adminModel');
+// const { hashPassword, comparePassword } = require('../Utils/passwordUtilities');
+// const createToken = require('../Utils/generateToken');
+// // REGISTER ADMIN
+// const registerAdmin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.status(400).json({ message: 'All fields are required' });
+//     }
+
+//     const adminExist = await adminDb.findOne({ email });
+//     if (adminExist) {
+//       return res.status(400).json({ message: 'Email already in use' });
+//     }
+
+//     const hashedPassword = await hashPassword(password);
+//     const admin = await adminDb. create({ email, password: hashedPassword });
+   
+
+//     // Create JWT token
+//      const token = createToken(admin._id, admin.role);
+
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: false,
+//       sameSite: "lax",
+//       path: "/",
+//       maxAge: 7 * 24 * 60 * 60 * 1000,
+//     });
+
+
+//     return res.status(201).json({
+//       message: 'Admin registered successfully',
+//       user: {
+//         email: admin.email,
+//         role: admin.role,
+//       },
+//       token, 
+      
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: error.message || 'Server error' });
+//   }
+// };
+
+
+// //LOGIN ADMIN
+// const loginAdmin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password)
+//       return res.status(400).json({ message: 'All fields are required' });
+
+//     const admin = await adminDb.findOne({ email });
+//     if (!admin)
+//       return res.status(400).json({ message: 'Admin not found' });
+
+//     const passwordMatch = await comparePassword(password, admin.password);
+//     if (!passwordMatch)
+//       return res.status(400).json({ message: 'Invalid password' });
+
+//     // Create token
+//    const token = createToken(admin._id, admin.role);
+//     res.cookie("token", token, {
+//   httpOnly: true,     // Protects against XSS (very important)
+//   secure: false, 
+//   path :"/",     // Set to true ONLY if using HTTPS. If local, keep false.
+//   sameSite: "lax",    // Allows the cookie to be sent across "same-site" requests
+//   maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+// });
+   
+//         return res.status(200).json({
+//       message: "Admin login success",
+//       user: {
+//         email: admin.email,
+//         role: admin.role,
+//         token,
+//       },
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: error.message || 'Server error' });
+//   }
+// };
+
+
+// // 
+
+
+// // LOGOUT ADMIN 
+// const logoutAdmin = async (req, res) => {
+//   try {
+//     res.clearCookie("token", {
+//       httpOnly: true,
+//       sameSite: "lax",
+//       path: "/",
+//     });
+
+//     res.status(200).json({ message: "Admin logout successful" });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+
+// const getAdminDetails = async (req, res) => {
+//   try {
+//     const adminId = req.admin;
+//     const admin = await adminDb.findById(adminId).select('-password');
+//     if (!admin) {
+//       return res.status(404).json({ message: 'Admin not found' });
+//     }
+
+//     res.status(200).json({ admin });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: error.message || 'Server error' });
+//   } 
+// };
+
+// module.exports = { registerAdmin, loginAdmin, logoutAdmin , getAdminDetails};
+
+
+
+
 const adminDb = require('../Models/adminModel');
 const { hashPassword, comparePassword } = require('../Utils/passwordUtilities');
 const createToken = require('../Utils/generateToken');
@@ -17,16 +148,18 @@ const registerAdmin = async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(password);
-    const newAdmin = new adminDb({ email, password: hashedPassword });
-    const savedAdmin = await newAdmin.save();
+    const admin = await adminDb.create({ email, password: hashedPassword });
 
     // Create JWT token
-    const token = createToken(savedAdmin._id, "admin");
+    const token = createToken(admin._id, admin.role);
 
     return res.status(201).json({
       message: 'Admin registered successfully',
-      token, 
-      
+      user: {
+        email: admin.email,
+        role: admin.role,
+      },
+      token, // frontend stores in localStorage
     });
 
   } catch (error) {
@@ -53,13 +186,20 @@ const loginAdmin = async (req, res) => {
 
     // Create token
     const token = createToken(admin._id, admin.role);
-      res.cookie("token", token, { httpOnly: true });
-   
-        return res.status(200).json({
+     res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
       message: "Admin login success",
       user: {
         email: admin.email,
         role: admin.role,
+        token, // send token to frontend
       },
     });
 
@@ -69,14 +209,34 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-// LOGOUT ADMIN 
+// LOGOUT ADMIN (for SPA, just frontend delete token)
 const logoutAdmin = async (req, res) => {
   try {
-    return res.status(200).json({ message: 'Logout successful' });
+    // Just inform frontend to remove token
+    res.status(200).json({ message: "Admin logout successful" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// GET ADMIN DETAILS
+const getAdminDetails = async (req, res) => {
+  try {
+    // req.admin comes from header-based auth middleware
+    const adminId = req.admin;
+
+    const admin = await adminDb.findById(adminId).select('-password');
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    res.status(200).json({ admin });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || 'Server error' });
   }
 };
 
-module.exports = { registerAdmin, loginAdmin, logoutAdmin };
+module.exports = { registerAdmin, loginAdmin, logoutAdmin, getAdminDetails };
+
+

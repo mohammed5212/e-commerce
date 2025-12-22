@@ -1,16 +1,30 @@
-const upload = require('../../Middlewares/multer');
-const { create, listProducts, productDetails ,updateProduct ,deleteProduct} = require('../../Controllers/productController');
-const authAdmin = require('../../Middlewares/authAdmin');
+const express = require("express");
+const upload = require("../../Middlewares/multer");
+const authAdmin = require("../../Middlewares/authAdmin");
 
+const {
+  create,
+  listProducts,
+  productDetails,
+  updateProduct,
+  deleteProduct,
+} = require("../../Controllers/productController");
 
+const router = express.Router();
 
-const productRouter = require('express').Router();
+// CREATE PRODUCT (ADMIN)
+router.post("/", authAdmin, upload.single("image"), create);
 
+// GET ALL PRODUCTS (PUBLIC)
+router.get("/", listProducts);
 
-productRouter.post('/create',authAdmin ,upload.single("image"), create);
-productRouter.get('/listProducts', listProducts);
-productRouter.get('/productDetails/:productId', productDetails);
-productRouter.put('/update/:productId', authAdmin, upload.single("image"), updateProduct);
-productRouter.delete('/delete/:productId', authAdmin, deleteProduct);
+// GET SINGLE PRODUCT
+router.get("/:id", productDetails);
 
-module.exports = productRouter;
+// UPDATE PRODUCT (ADMIN)
+router.put("/:id", authAdmin, upload.single("image"), updateProduct);
+
+// DELETE PRODUCT (ADMIN)
+router.delete("/:id", authAdmin, deleteProduct);
+
+module.exports = router;

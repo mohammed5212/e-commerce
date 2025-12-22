@@ -17,23 +17,28 @@ const register =async (req, res) => {
             return res.status(400).json({ message: 'Email already in use' });
         }
         const hashedPassword = await hashPassword(password);
-        const newUser = new userDb({ username, email, password:hashedPassword });
+        const user = await userDb.create({ username, email, password:hashedPassword });
         
-        const saved = await newUser.save();
-        if (saved) {
-          const token = createToken(saved._id);
-          res.cookie("token",token)
+           const token = createToken(user._id, user.role);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
 return res.status(201).json({
         message: "User registered successfully",
         token,
         user: {
-          username: saved.username,
-          email: saved.email,
-         role: saved.role 
+          username: user.username,
+          email: user.email,
+         role: user.role 
           
         },
-      });        }
+      });        
     } catch (error) {
         console.log(error);
         res.status(error.status || 500).json({ error:error.message ||  'Server error' });
@@ -41,10 +46,9 @@ return res.status(201).json({
 }
 
 const login = async (req, res) => {
-  try {
+  // try {
     const { email, password } = req.body;
-    console.log(email,password);
-
+   
     // Check fields
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -58,14 +62,20 @@ const login = async (req, res) => {
 
     // Match password
     const passwordMatch = await comparePassword(password, userExist.password);
-    console.log(passwordMatch);
     if (!passwordMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
+    console.log("User authenticated successfully");
       const token = createToken(userExist._id, userExist.role);
-          res.cookie("token",token)
+           res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-    
+    console.log("Generated Token:");
        return res.status(200).json({
       message: "Login successful",
       token,
@@ -79,10 +89,10 @@ const login = async (req, res) => {
     });
    
 
-  } catch (error) {
-     console.log(error);
-        res.status(error.status || 500).json({ error:error.message ||  'Server error' });
-  }
+  // } catch (error) {
+  //    console.log(error);
+  //       res.status(error.status || 500).json({ error:error.message ||  'Server error' });
+  // }
 };
  const logout = async (req, res) => {
   try {
