@@ -1,13 +1,14 @@
-import UserSidebar from "../components/UserSidebar";
-import UserHeader from "../components/UserHeader";
+import AdminSidebar from "../components/AdminSidebar";
+import AdminHeader from "../components/AdminHeader";
 import { Outlet } from "react-router-dom";
 
-const UserLayout = () => {
+const AdminLayout = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <UserSidebar />
+      <AdminSidebar />
+
       <div className="flex-1">
-        <UserHeader />
+        <AdminHeader />
         <main className="p-6">
           <Outlet />
         </main>
@@ -16,4 +17,4 @@ const UserLayout = () => {
   );
 };
 
-export default UserLayout;
+export default AdminLayout;

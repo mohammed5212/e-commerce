@@ -11,7 +11,7 @@ import { loginUser, loginAdmin } from "../../services/userServices";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
+  
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,44 +21,44 @@ const LoginPage = () => {
     setError("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!form.email || !form.password) {
-      setError("All fields are required");
-      return;
-    }
+  if (!form.email || !form.password) {
+    setError("All fields are required");
+    return;
+  }
 
+  try {
+    setLoading(true);
+
+    // Try admin login first
+    await loginAdmin({
+      email: form.email,
+      password: form.password,
+    });
+
+    // If success → backend set cookie
+    navigate("/admin/admindashboard");
+
+  } catch (adminErr) {
     try {
-      setLoading(true);
+      // If admin fails → try user
+      await loginUser({
+        email: form.email,
+        password: form.password,
+      });
 
-      //  ADMIN LOGIN FIRST
-      try {
-        const adminRes = await loginAdmin(form);
+      navigate("/user/userdashboard");
 
-        if (adminRes.data.user.role === "admin") {
-          return navigate("/admin/admindashboard");
-        }
-      } catch (adminErr) {
-        
-      }
-
-      //  USER LOGIN
-      const userRes = await loginUser(form);
-
-      if (userRes.data.user.role === "user") {
-        return navigate("/user/userdashboard");
-      }
-
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        "Invalid email or password"
-      );
-    } finally {
-      setLoading(false);
+    } catch (userErr) {
+      setError("Invalid email or password");
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -79,8 +79,10 @@ const LoginPage = () => {
               <Input
                 type="email"
                 name="email"
+                placeholder="....@gmail.com"
                 value={form.email}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -89,8 +91,10 @@ const LoginPage = () => {
               <Input
                 type="password"
                 name="password"
+                placeholder="••••••••"
                 value={form.password}
                 onChange={handleChange}
+                required
               />
             </div>
           </CardContent>
@@ -101,11 +105,15 @@ const LoginPage = () => {
             </Button>
           </CardFooter>
 
-          <div className="text-sm text-center mb-4">
+          <div className="text-sm text-center mb-4 text-gray-600 dark:text-gray-400">
             Don’t have an account?{" "}
-            <a href="/register" className="text-sky-500 hover:underline">
+            <button 
+              type="button"
+              onClick={() => navigate("/register")} 
+              className="text-sky-500 hover:underline bg-transparent border-none cursor-pointer"
+            >
               Register
-            </a>
+            </button>
           </div>
         </form>
       </Card>

@@ -28,7 +28,7 @@ const Products = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/product/listProducts")
+      .get("/product")
       .then((response) => {
         console.log("Products data:", response.data);
 
