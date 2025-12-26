@@ -1,10 +1,23 @@
-const { register, logout, login } = require("../../Controllers/userController");
+const express = require("express");
+const {
+  register,
+  login,
+  logout,
+  getCurrentUser,
+} = require("../../Controllers/userController");
 
+const authUser = require("../../Middlewares/authUser");
 
-const userRouter = require("express").Router();
+const router = express.Router();
 
-userRouter.post("/register", register);
-userRouter.post("/login", login);
-userRouter.post("/logout", logout);
+// Public routes
+router.post("/register", register);
+router.post("/login", login);
 
-module.exports = userRouter;
+// Protected routes
+router.get("/me", authUser, getCurrentUser);
+
+// Logout user
+router.get("/logout", authUser, logout);
+
+module.exports = router;

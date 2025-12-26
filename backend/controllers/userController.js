@@ -103,10 +103,26 @@ const login = async (req, res) => {
     res.status(error.status || 500).json({ error: error.message || "Server error" });
   } 
 };
+///get current user
+const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user; // Assuming authUser middleware sets req.user
+    const user = await userDb.findById(userId).select('-password'); // Exclude password
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status || 500).json({ error: error.message || 'Server error' });
+  } 
+};
+
 
 
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  getCurrentUser
 };
