@@ -1,40 +1,45 @@
-// import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-// const initialState = {
-//   user: null,        // { email, role, id }
-//   isAuthenticated: false,
-//   loading: false,
-// };
+const userFromStorage = localStorage.getItem("user");
 
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState,
-//   reducers: {
-// // 
-//     //  LOGIN SUCCESS
-//     loginSuccess: (state, action) => {
-//       state.user = action.payload;
-//       state.isAuthenticated = true;
-//       state.loading = false;
-//     },
+const initialState = {
+  user: userFromStorage ? JSON.parse(userFromStorage) : null,
+  isAuthenticated: !!userFromStorage,
+  loading: false,
+};
 
-//     //  LOGOUT
-//     logout: (state) => {
-//       state.user = null;
-//       state.isAuthenticated = false;
-//     },
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+// 
+    //  LOGIN SUCCESS
+   loginSuccess: (state, action) => {
+  state.user = action.payload.user;
+  state.role = action.payload.role;
+  state.isAuthenticated = true;
+  state.loading = false;
+},
 
-//     //  OPTIONAL: LOADING
-//     setAuthLoading: (state, action) => {
-//       state.loading = action.payload;
-//     },
-//   },
-// });
+    //  LOGOUT
+   logout: (state) => {
+  state.user = null;
+  state.isAuthenticated = false;
+  localStorage.removeItem("user");
+},
 
-// export const {
-//   loginSuccess,
-//   logout,
-//   setAuthLoading,
-// } = authSlice.actions;
+    //  OPTIONAL: LOADING
+    setAuthLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+  },
+});
 
-// export default authSlice.reducer;
+export const {
+  loginSuccess,
+  logout,
+  setAuthLoading,
+} = authSlice.actions;
+
+export default authSlice.reducer;
+  

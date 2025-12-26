@@ -1,28 +1,10 @@
+import { axiosInstance } from "../axios/axiosInstance";
 
-
-import { use } from "react";
-import  {axiosInstance}  from "../axios/axiosInstance";
-
-export const listProducts=() => {
-    return axiosInstance.get('/products/listproducts');
-};
-export const registerUser = (userData) => {
-    return axiosInstance.post('/user/register', userData);
+// Products
+export const listProducts = () => {
+  return axiosInstance.get("/products/listproducts");
 };
 
-export const loginUser = (userRes) => {
-    return axiosInstance.post('/user/login',userRes );
-}
-export const loginAdmin= (adminRes) => {
-    return axiosInstance.post('/admin/login',adminRes );
-}
-export const logout = () => {
-  return axiosInstance.get("/auth/logout"); // or /admin/logout /user/logout
-}
-
-export const getMe = () => {
-  return axiosInstance.get("/auth/me"); // or /admin/me /user/me
-};
 export const getProducts = async () => {
   const response = await axiosInstance.get("/product/listProducts");
   return response.data;
@@ -36,3 +18,44 @@ export const updateProduct = (id, data) =>
 
 export const deleteProduct = (id) =>
   axiosInstance.delete(`/admin/products/${id}`);
+
+// Auth
+
+// Unified login for both admin & user
+export const adminLogin = (formData) => {
+  return axiosInstance.post("/admin/login", formData);
+};
+
+
+export const userLogin = (formData) => {
+  return axiosInstance.post("/user/login", formData);
+};
+
+// Logout (backend clears cookie)
+export const logout = () => axiosInstance.get("/auth/logout");
+
+// Get currently logged-in user
+export const getMe = () => axiosInstance.get("/auth/me");
+
+// User registration
+export const registerUser = (userData) =>
+  axiosInstance.post("/user/register", userData);
+
+
+
+
+// import  {axiosInstance}  from "../axios/axiosInstance";
+
+// export const listProducts=() => {
+//     return axiosInstance.get('/products/listproducts');
+// };
+// export const registerUser = (userData) => {
+//     return axiosInstance.post('/user/register', userData);
+// };
+
+// export const loginUser = (credentials) => {
+//     return axiosInstance.post('/user/login', credentials);
+// }
+// export const loginAdmin= (credentials) => {
+//     return axiosInstance.post('/admin/login', credentials);
+// }

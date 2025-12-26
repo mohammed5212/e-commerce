@@ -7,11 +7,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { loginUser, loginAdmin } from "../../services/userServices";
+import { adminLogin, userLogin } from "../../services/userServices"; // unified login
+// import { useDispatch } from, "react-redux";
+// import { loginSuccess } from "../../redux/slices/authSlice";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  
+
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,44 +23,44 @@ const LoginPage = () => {
     setError("");
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!form.email || !form.password) {
-    setError("All fields are required");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    // Try admin login first
-    await loginAdmin({
-      email: form.email,
-      password: form.password,
-    });
-
-    // If success → backend set cookie
-    navigate("/admin/admindashboard");
-
-  } catch (adminErr) {
-    try {
-      // If admin fails → try user
-      await loginUser({
-        email: form.email,
-        password: form.password,
-      });
-
-      navigate("/user/userdashboard");
-
-    } catch (userErr) {
-      setError("Invalid email or password");
+    if (!form.email || !form.password) {
+      setError("All fields are required");
+      return;
     }
-  } finally {
-    setLoading(false);
-  }
-};
 
+    try {
+      setLoading(true);
+
+      //  login call (backend determines role)
+      const res = await adminLogin(form);
+
+      // res.data.user => { id, email, role }
+      const user = res.data.user;
+
+      // Dispatch to Redux
+      // dispatch(loginSuccess(user));
+
+      // // Persist in localStorage for refresh
+      // localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect based on role
+      if (user.role === "admin") {
+        navigate("/admin/admindashboard");
+      } else if (user.role === "user") {
+        navigate("/user/userdashboard");
+      } else {
+        setError("Unauthorized role");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -79,7 +81,7 @@ const LoginPage = () => {
               <Input
                 type="email"
                 name="email"
-                placeholder="....@gmail.com"
+                placeholder="you@example.com"
                 value={form.email}
                 onChange={handleChange}
                 required
