@@ -159,7 +159,7 @@ export const router = createBrowserRouter([
       path: "/products",
     element: <Products/>,
   },
-{
+ {
       path: "/category",
     element: <CategoryPage/>,
   },
@@ -173,11 +173,11 @@ export const router = createBrowserRouter([
   },
 
 
-{
+ {
   path: "/unauthorized",
   element: <h1>Unauthorized Access</h1>,
     
-}
+ }
   ]},
     {
     path: "/admin",
