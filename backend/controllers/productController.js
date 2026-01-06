@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { uploadToCloudinary } = require("../Utils/imageUpload");
 const ProductDb = require("../models/productModel");
 const CategoryDb = require("../models/categoryModel");
@@ -46,7 +47,11 @@ const create = async (req, res) => {
 const listProducts = async (req, res) => {
   try {
     const products = await ProductDb.find()
-      .populate("category", "name");
+      .populate({
+        path: "category",
+        select: "name",
+        strictPopulate: false, // prevents crash if category missing
+      });
 
     res.status(200).json({ products });
   } catch (error) {
@@ -81,7 +86,7 @@ const productDetails = async (req, res) => {
  */
 const updateProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
+    const { id: productId } = req.params;
     const { title, price, category } = req.body;
 
     const product = await ProductDb.findById(productId);
@@ -104,16 +109,34 @@ const updateProduct = async (req, res) => {
       }
     }
 
-    const updatedProduct = await ProductDb.findByIdAndUpdate(
-      productId,
-      {
-        title: title || product.title,
-        price: price || product.price,
-        category: category || product.category,
-        image: imageUrl,
-      },
-      { new: true }
-    ).populate("category", "name");
+    // const updatedProduct = await ProductDb.findByIdAndUpdate(
+    //   productId,
+    //   {
+    //     title: title || product.title,
+    //     price: price || product.price,
+    //     category: category || product.category,
+    //     image: imageUrl,
+    //   },
+    //   { new: true }
+    // ).populate("category", "name");
+    const updateData = {
+  title: title?.trim() || product.title,
+  price: price || product.price,
+  
+};
+if (category && mongoose.Types.ObjectId.isValid(category)) {
+  updateData.category = category;
+}
+// only update image if a new file is uploaded
+if (imageUrl) {
+  updateData.image = imageUrl;
+}
+
+const updatedProduct = await ProductDb.findByIdAndUpdate(
+  productId,
+  updateData,
+  { new: true }
+).populate("category", "name");
 
     res.status(200).json({
       message: "Product updated successfully",
@@ -130,9 +153,9 @@ const updateProduct = async (req, res) => {
  */
 const deleteProduct = async (req, res) => {
   try {
-    const { productId } = req.params;
+  const {id}= req.params;
 
-    const deletedProduct = await ProductDb.findByIdAndDelete(productId);
+    const deletedProduct = await ProductDb.findByIdAndDelete(id);
 
     if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
