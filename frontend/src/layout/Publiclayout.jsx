@@ -4,7 +4,7 @@ import Header from "../components/user/Header.jsx";
 import Footer from "../components/user/Footer.jsx";
 import { Outlet } from "react-router-dom";
 
-const Publiclayout = () => {
+const PublicLayout = () => {
   return (
   <div className="min-h-screen flex flex-col bg-white text-black dark:bg-[#111827] dark:text-white">
       {/* Header stays on top */}
@@ -22,4 +22,4 @@ const Publiclayout = () => {
   );
 };
 
-export default Publiclayout;
+export default PublicLayout;

@@ -1,8 +1,8 @@
-import { logout } from "../services/userServices";
+import { logoutAdmin } from "../services/adminServices";
 
 const AdminHeader = () => {
   const handleLogout = async () => {
-    await logout();
+    await logoutAdmin();
     window.location.href = "/login";
   };
 

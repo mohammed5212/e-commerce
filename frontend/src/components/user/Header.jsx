@@ -11,11 +11,11 @@ const Header = () => {
   const [open, setOpen] = useState(false); // Initialize state for mobile menu
 const handleMobileLogin = () => {
     setOpen(false); // Close the Sheet
-    navigate("/login"); // Navigate to the login page
+    navigate("/user/login"); // Navigate to the user login page
   };
   // Simple navigation function for the desktop button
   const handleDesktopLogin = () => {
-    navigate("/login");
+    navigate("/user/login");
   };
   return (
     <header className="bg-white text-black dark:bg-[#1d232a] dark:text-white border-b border-gray-300 dark:border-gray-700">

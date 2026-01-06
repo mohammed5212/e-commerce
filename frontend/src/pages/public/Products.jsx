@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../../components/Card.jsx";
 import React from "react";
-import { axiosInstance } from "@/axios/axiosInstance.js";
+import { userAxios } from "@/axios/userAxios.js";
 
 const Products = () => {
   const [products, setProducts] = useState([]); // <<< MUST HAVE THIS
@@ -27,7 +27,7 @@ const Products = () => {
   ];
 
   useEffect(() => {
-    axiosInstance
+   userAxios
       .get("/product")
       .then((response) => {
         console.log("Products data:", response.data);
