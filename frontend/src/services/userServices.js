@@ -1,46 +1,19 @@
-import { axiosInstance } from "../axios/axiosInstance";
+import { userAxios } from "../axios/userAxios";
 
-// Products
-export const listProducts = () => {
-  return axiosInstance.get("/products/listproducts");
-};
+// AUTH
+export const UserLogin = (formData) =>
+  userAxios.post("/user/login", formData);
 
-export const getProducts = async () => {
-  const response = await axiosInstance.get("/product/listProducts");
-  return response.data;
-};
+export const userRegister = (formData) =>
+  userAxios.post("/user/register", formData);
 
-export const createProduct = (data) =>
-  axiosInstance.post("/admin/products", data);
+export const userLogout = () =>
+  userAxios.post("/user/logout");
 
-export const updateProduct = (id, data) =>
-  axiosInstance.put(`/admin/products/${id}`, data);
+// GET CURRENT USER
+export const getCurrentUser = () =>
+  userAxios.get("/user/me");
 
-export const deleteProduct = (id) =>
-  axiosInstance.delete(`/admin/products/${id}`);
-
-// Auth
-
-// Unified login for both admin & user
-export const adminLogin = (formData) => {
-  return axiosInstance.post("/admin/login", formData);
-};
-
-
-export const userLogin = (formData) => {
-  return axiosInstance.post("/user/login", formData);
-};
-
-// Logout (backend clears cookie)
-export const logout = () => axiosInstance.get("/auth/logout");
-
-// Get currently logged-in user
-export const getMe = () => axiosInstance.get("/auth/me");
-
-// User registration
-export const registerUser = (userData) =>
-  axiosInstance.post("/user/register", userData);
-
-
-
-
+// (optional) USER DASHBOARD
+export const getUserDashboard = () =>
+  userAxios.get("/user/dashboard");

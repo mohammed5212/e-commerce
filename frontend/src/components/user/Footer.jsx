@@ -50,6 +50,12 @@ import { Facebook, Twitter, Instagram, Github } from "lucide-react";
               <a href="#" aria-label="GitHub" className="hover:text-primary dark:hover:text-blue-400"><Github size={20} /></a>
             </div>
           </div>
+          <Link
+  to="/admin/login"
+  className="text-xs text-gray-400 hover:text-gray-600"
+>
+  Admin
+</Link>
 
         </div>
 

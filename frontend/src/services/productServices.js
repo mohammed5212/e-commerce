@@ -1,35 +1,35 @@
-import { axiosInstance } from "../axios/axiosInstance";
+import { userAxios } from "../axios/userAxios";
+import { adminAxios } from "../axios/adminAxios";
 
-/* GET ALL PRODUCTS */
+/* =======================
+   PUBLIC / USER
+======================= */
+
 export const getProducts = async () => {
-  const res = await axiosInstance.get(
-   "product/listProducts"
-  );
+  const res = await userAxios.get("/product");
   return res.data;
 };
 
-/* CREATE PRODUCT */
+export const getProductById = (id) => {
+  return userAxios.get(`/product/${id}`);
+};
+
+/* =======================
+   ADMIN ONLY
+======================= */
+
 export const createProduct = async (data) => {
-  const res = await axiosInstance.post(
-    "/product",
-    data
-  );
+  const res = await adminAxios.post("/product", data);
   return res.data;
 };
 
-/* UPDATE PRODUCT */
 export const updateProduct = async (id, data) => {
-  const res = await axiosInstance.put(
-    `product/update/${id}`,
-    data
-  );
+  const res = await adminAxios.put(`/product/${id}`, data);
   return res.data;
 };
 
-/* DELETE PRODUCT */
 export const deleteProduct = async (id) => {
-  const res = await axiosInstance.delete(
-    `product/delete/${id}`
-  );
+    console.log("DELETE URL:", `/product/${id}`);
+  const res = await adminAxios.delete(`/product/${id}`);
   return res.data;
 };

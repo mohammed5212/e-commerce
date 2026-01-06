@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import {
-  Card, CardContent, CardDescription,
-  CardFooter, CardHeader, CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { adminLogin, userLogin } from "../../services/userServices"; // unified login
-// import { useDispatch } from, "react-redux";
-// import { loginSuccess } from "../../redux/slices/authSlice";
 
-const LoginPage = () => {
+import { UserLogin as loginService, getCurrentUser } from "../../services/userServices";
+import { loginSuccess } from "../../redux/slices/authSlice";
+
+const userLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -34,29 +41,26 @@ const LoginPage = () => {
     try {
       setLoading(true);
 
-      //  login call (backend determines role)
-      const res = await adminLogin(form);
+      // Login request
+      await loginService(form); // backend sets 'userToken' cookie automatically
 
-      // res.data.user => { id, email, role }
+      // Fetch current user using cookie
+      const res = await getCurrentUser(); 
       const user = res.data.user;
 
-      // Dispatch to Redux
-      // dispatch(loginSuccess(user));
-
-      // // Persist in localStorage for refresh
-      // localStorage.setItem("user", JSON.stringify(user));
-
-      // Redirect based on role
-      if (user.role === "admin") {
-        navigate("/admin/admindashboard");
-      } else if (user.role === "user") {
-        navigate("/user/userdashboard");
-      } else {
-        setError("Unauthorized role");
+      if (user.role !== "user") {
+        throw new Error("Not authorized as user");
       }
+
+      // Store in Redux (optional, no need for localStorage token)
+      dispatch(loginSuccess(user));
+      localStorage.setItem("user", JSON.stringify(user)); // optional, just for UI state
+
+      // Redirect
+      navigate("/user");
     } catch (err) {
       console.error(err);
-      setError("Invalid email or password");
+      setError(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -66,10 +70,8 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <Card className="w-[380px] bg-gray-100 dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-2xl">Log In</CardTitle>
-          <CardDescription>
-            Enter your credentials to continue
-          </CardDescription>
+          <CardTitle className="text-2xl">User Login</CardTitle>
+          <CardDescription>Login to continue shopping</CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
@@ -84,7 +86,6 @@ const LoginPage = () => {
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={handleChange}
-                required
               />
             </div>
 
@@ -96,7 +97,6 @@ const LoginPage = () => {
                 placeholder="••••••••"
                 value={form.password}
                 onChange={handleChange}
-                required
               />
             </div>
           </CardContent>
@@ -109,9 +109,9 @@ const LoginPage = () => {
 
           <div className="text-sm text-center mb-4 text-gray-600 dark:text-gray-400">
             Don’t have an account?{" "}
-            <button 
+            <button
               type="button"
-              onClick={() => navigate("/register")} 
+              onClick={() => navigate("/user/register")}
               className="text-sky-500 hover:underline bg-transparent border-none cursor-pointer"
             >
               Register
@@ -123,4 +123,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default userLogin;

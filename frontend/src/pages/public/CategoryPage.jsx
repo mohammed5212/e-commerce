@@ -1,10 +1,10 @@
 import React from "react";
 
-const CategoryPage = () => {
+const Category = () => {
   return (
     <div >
          This is Category Page
          </div>
     );
 }
-    export default CategoryPage;
+    export default Category;

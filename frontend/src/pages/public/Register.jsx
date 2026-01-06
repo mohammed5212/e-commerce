@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../services/userServices";
+import { userRegister } from "../../services/userServices";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ const Register = () => {
     try {
       setLoading(true);
 
-      await registerUser({
+      await userRegister({
         username: form.username,
         email: form.email,
         password: form.password,
         confirmpassword: form.confirmpassword,
       });
 
-      navigate("/login");
+      navigate("/user/login");
     } catch (err) {
       setError(
         err.response?.data?.message ||
