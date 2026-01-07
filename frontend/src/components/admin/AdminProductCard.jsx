@@ -97,7 +97,7 @@ const AdminProductCard = ({ product, categories, onUpdated }) => {
           </button>
            <button
             onClick={handleDelete}
-            className="bg-red-600 text-white mt-2 w-full"
+            className="bg-red-600 text-white mt-3 w-full"
           >
             Delete
           </button>
