@@ -23,7 +23,7 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ Redirect if already logged in
+  //  Redirect if already logged in
   useEffect(() => {
     adminAxios
       .get("/admin/me")
@@ -100,8 +100,16 @@ const AdminLogin = () => {
               {loading ? "Signing in..." : "Admin Sign In"}
             </Button>
           </CardFooter>
+           <button
+          onClick={() => navigate("/")}
+          className="mt-4 w-full py-2 border border-gray-400 rounded hover:bg-gray-100"
+        >
+          Go to Home
+        </button>
         </form>
       </Card>
+
+      
     </div>
   );
 };

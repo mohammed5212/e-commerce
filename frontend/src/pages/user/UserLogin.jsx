@@ -57,7 +57,7 @@ const userLogin = () => {
       localStorage.setItem("user", JSON.stringify(user)); // optional, just for UI state
 
       // Redirect
-      navigate("/user");
+      navigate("/products");
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Invalid email or password");

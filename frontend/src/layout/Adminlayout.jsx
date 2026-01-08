@@ -1,11 +1,11 @@
-import AdminSidebar from "../components/AdminSidebar";
+// import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <AdminSidebar />
+      {/* <AdminSidebar /> */}
 
       <div className="flex-1">
         <AdminHeader />

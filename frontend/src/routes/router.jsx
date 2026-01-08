@@ -1,63 +1,56 @@
 import { createBrowserRouter } from "react-router-dom";
-import AdminProtectedRoute from "./AdminProtectedRoute";
-
 
 import PublicLayout from "../layout/PublicLayout";
+import UserLayout from "@/layout/UserLayout";
+import AdminLayout from "@/layout/AdminLayout";
+
 import Home from "../pages/public/Homepage";
 import Products from "@/pages/public/Products";
-import AboutPage from "../pages/public/AboutPage"
-import Category from "../pages/public/CategoryPage"
+import AboutPage from "../pages/public/AboutPage";
+import Register from "../pages/public/Register";
 
-import AdminLayout from "@/layout/AdminLayout";
-import AdminLogin from "@/pages/admin/AdminLogin";
-import AdminDashboard from "../pages/admin/AdminDashbord";
-
-import UserLayout from "@/layout/UserLayout";
 import UserLogin from "../pages/user/UserLogin";
-import Register from "../pages/public/Register"
 import UserDashboard from "../pages/user/UserDashbord";
 import Cart from "../pages/user/cartPage";
+
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminDashboard from "../pages/admin/AdminDashbord";
+import CategoryManagement from "../pages/admin/CategoryManagement";
+
+import AdminProtectedRoute from "./AdminProtectedRoute";
 import UserProtectedRoute from "./UserProtuctedRoute";
-// import Checkout from "@/pages/user/Checkout";
+import ErrorPage from "../pages/public/ErrorPage";
 
 const router = createBrowserRouter([
+  { path: "/", element: <Home />, errorElement: <ErrorPage />,},
 
-      { path: "/", element: <Home /> },
-      
-      {
-        element: <PublicLayout />,
-        children: [
-           { path: "/products", element: <Products /> },
-            { path:"/about",element:<AboutPage/>},
-            { path:"/category",element:<Category/>},
-        ]
-      },
-
-       {
-    path: "/user/login",
-    element: <UserLogin />,
+  {
+    element: <PublicLayout />,
+    children: [
+      { path: "/products", element: <Products /> },
+      { path: "/about", element: <AboutPage /> },
+    ],
   },
-    {path :"/user/register", element :<Register/>},
-       {
+
+  { path: "/user/login", element: <UserLogin /> },
+  { path: "/user/register", element: <Register /> },
+
+  {
     path: "/user",
     element: <UserProtectedRoute />,
     children: [
       {
         element: <UserLayout />,
         children: [
-            
           { index: true, element: <UserDashboard /> },
           { path: "cart", element: <Cart /> },
-        //   { path: "checkout", element: <Checkout /> },
         ],
       },
     ],
   },
 
-  {
-    path: "/admin/login",
-    element: <AdminLogin />,
-  },
+  { path: "/admin/login", element: <AdminLogin /> },
+
   {
     path: "/admin",
     element: <AdminProtectedRoute />,
@@ -66,7 +59,7 @@ const router = createBrowserRouter([
         element: <AdminLayout />,
         children: [
           { index: true, element: <AdminDashboard /> },
-            { path: "dashboard", element: <AdminDashboard /> },
+          { path: "category", element: <CategoryManagement /> },
         ],
       },
     ],

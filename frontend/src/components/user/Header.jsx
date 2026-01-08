@@ -30,8 +30,7 @@ const handleMobileLogin = () => {
         <nav className="hidden md:flex gap-6 text-sm font-medium">
           <Link to="/" className="hover:text-primary dark:hover:text-blue-400">Home</Link>
           <Link to="/products" className="hover:text-primary dark:hover:text-blue-400">Products</Link>
-          <Link to="/about" className="hover:text-primary dark:hover:text-blue-400">About</Link>
-          <Link to="/category" className="hover:text-primary dark:hover:text-blue-400">Category</Link>
+          <Link to="/user" className="hover:text-primary dark:hover:text-blue-400">My Profile</Link>
         </nav>
 
         {/* Right Buttons */}
@@ -59,7 +58,7 @@ const handleMobileLogin = () => {
               <Link to="/" onClick={() => setOpen(false)}>Home</Link>
               <Link to="/products" onClick={() => setOpen(false)}>Products</Link>
               <Link to="/about" onClick={() => setOpen(false)}>About</Link>
-              <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
+              <Link to="/user" onClick={() => setOpen(false)}>My Profile</Link>
             </nav>
             
             <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-3">
